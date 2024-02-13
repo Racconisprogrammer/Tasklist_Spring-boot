@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 ### My config ###
+src/main/resources/application.yml
 .env
 
 
