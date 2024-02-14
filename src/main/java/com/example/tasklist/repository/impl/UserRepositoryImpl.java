@@ -12,6 +12,52 @@ import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
+
+    private final String FIND_BY_ID = """
+            SELECT t.id as task_id,
+                    t.title as task_title,
+                    t.description as task_description,
+                    t.expiration_date as task_expiration_date,
+                    t.status as task_status         
+            FROM tasks t 
+            WHERE id = ?
+            """;
+
+    private final String FIND_ALL_BY_USER_ID = """
+            SELECT t.id as task_id,
+                    t.title as task_title,
+                    t.description as task_description,
+                    t.expiration_date as task_expiration_date,
+                    t.status as task_status         
+            FROM tasks t 
+                JOIN users_tasks ut on t.id = ut.task_id
+            WHERE ut.user_id = ?
+            """;
+
+    private final String ASSIGN = """
+            INSERT INTO users_tasks(task_id, user_id)
+            values (?, ?)
+            """;
+
+    private final String UPDATE = """
+            UPDATE tasks
+            SET title = ?,
+            description = ?,
+            expiration_date = ?,
+            status = ?
+            where id = ?
+            """;
+
+    private final String CREATE = """
+            INSERT INTO tasks (title, description, expiration_date, status) 
+            values (?, ?, ?. ?)
+            """;
+
+    private final String DELETE = """
+            DELETE FROM tasks
+            WHERE id = ?
+            """;
+
     @Override
     public Optional<User> findById(Long id) {
         return Optional.empty();
