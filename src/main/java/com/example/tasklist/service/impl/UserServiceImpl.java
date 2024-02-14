@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("User already exists");
         }
         if (!user.getPassword().equals(user.getPasswordConfirmation())) {
-            throw new IllegalStateException("Password ana password confirmation do not match.")
+            throw new IllegalStateException("Password ana password confirmation do not match.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.create(user);
