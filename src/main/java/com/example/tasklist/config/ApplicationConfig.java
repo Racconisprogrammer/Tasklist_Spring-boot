@@ -4,9 +4,11 @@ package com.example.tasklist.config;
 import com.example.tasklist.web.security.JwtTokenFilter;
 import com.example.tasklist.web.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class ApplicationConfig {
 
 
@@ -34,7 +36,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    @SneakyThrows
+    public AuthenticationManager authenticationManager(final AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
     }
 
@@ -43,8 +46,7 @@ public class ApplicationConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(httpCors -> {
-                })
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagment ->
                         sessionManagment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHand ->
@@ -58,7 +60,7 @@ public class ApplicationConfig {
                                 }))
                 )
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("api/v1/auth/**").permitAll()
+                        auth.requestMatchers("/api/v1/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .anonymous(AbstractHttpConfigurer::disable)

@@ -9,6 +9,7 @@ import com.example.tasklist.web.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 
@@ -21,9 +22,14 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public JwtResponse login(JwtRequest loginRequest) {
+    public JwtResponse login(final JwtRequest loginRequest) {
         JwtResponse jwtResponse = new JwtResponse();
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Authentication failed: " + e.getMessage());
+        }
         User user = userService.getByUsername(loginRequest.getUsername());
         jwtResponse.setId(user.getId());
         jwtResponse.setUsername(user.getUsername());

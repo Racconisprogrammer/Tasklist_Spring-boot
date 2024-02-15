@@ -3,7 +3,6 @@ package com.example.tasklist.web.security;
 
 import com.example.tasklist.domain.user.User;
 import com.example.tasklist.service.UserService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,8 +17,10 @@ public class JwtUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        System.out.println("oooooooooooooooooooooooooooooooooooooooooo" + username);
         User user = userService.getByUsername(username);
+        System.out.println("1 " + user.getId() + "\n2 " + user.getUsername() );
         return JwtEntityFactory.create(user);
     }
 }

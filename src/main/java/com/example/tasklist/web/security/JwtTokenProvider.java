@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -43,17 +45,16 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(Long userId, String username, Set<Role> roles) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
         Claims claims = Jwts.claims()
                 .subject(username)
                 .add("id", userId)
                 .add("roles", resolveRoles(roles))
                 .build();
+        Instant validity = Instant.now()
+                .plus(jwtProperties.getAccess(), ChronoUnit.HOURS);
         return Jwts.builder()
                 .claims(claims)
-                .issuedAt(now)
-                .expiration(validity)
+                .expiration(Date.from(validity))
                 .signWith(key)
                 .compact();
     }
@@ -87,14 +88,15 @@ public class JwtTokenProvider {
         }
         Long userId = Long.valueOf(getId(refreshToken));
         User user = userService.getById(userId);
-        jwtResponse.setId(user.getId());
+        jwtResponse.setId(userId);
         jwtResponse.setUsername(user.getUsername());
         jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getRoles()));
         jwtResponse.setRefreshToken(createRefreshToken(userId, user.getUsername()));
         return jwtResponse;
     }
 
-    public boolean isValid(String token) {
+    public boolean isValid(final String token) {
+        System.out.println("4444444444444444444444444444444444444444444444");
         Jws<Claims> claims = Jwts
                 .parser()
                 .verifyWith(key)
@@ -126,8 +128,11 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
+        System.out.println("55555555555555555555555555555555555555555555555555");
         String username = getUsername(token);
+        System.out.println("serrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        System.out.println("usereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

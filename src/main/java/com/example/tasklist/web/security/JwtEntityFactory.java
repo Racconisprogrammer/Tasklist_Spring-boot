@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class JwtEntityFactory {
 
-    public static JwtEntity create(User user) {
+    public static JwtEntity create(final User user) {
         return new JwtEntity(
                 user.getId(),
                 user.getUsername(),

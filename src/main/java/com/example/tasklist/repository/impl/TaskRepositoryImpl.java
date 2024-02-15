@@ -28,7 +28,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                     t.expiration_date as task_expiration_date,
                     t.status as task_status         
             FROM tasks t 
-            WHERE id = ?
+            WHERE t.id = ?
             """;
 
     private final String FIND_ALL_BY_USER_ID = """
@@ -128,7 +128,7 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
             statement.setString(4, task.getStatus().name());
             statement.setLong(5, task.getId());
-            statement.executeQuery();
+            statement.executeUpdate();
         } catch (SQLException throwables) {
             throw new ResourceMappingException("Error while updating to task.");
         }
@@ -151,7 +151,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                 statement.setTimestamp(3, Timestamp.valueOf(task.getExpirationDate()));
             }
             statement.setString(4, task.getStatus().name());
-            statement.executeQuery();
+            statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 resultSet.next();
                 task.setId(resultSet.getLong(1));

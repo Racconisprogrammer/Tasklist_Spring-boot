@@ -30,7 +30,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User getByUsername(String username) {
-        return null;
+        return userRepository.findByUsername(username)
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
+
     }
 
     @Override
