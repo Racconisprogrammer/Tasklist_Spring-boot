@@ -96,7 +96,6 @@ public class JwtTokenProvider {
     }
 
     public boolean isValid(final String token) {
-        System.out.println("4444444444444444444444444444444444444444444444");
         Jws<Claims> claims = Jwts
                 .parser()
                 .verifyWith(key)
@@ -128,11 +127,8 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        System.out.println("55555555555555555555555555555555555555555555555555");
         String username = getUsername(token);
-        System.out.println("serrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        System.out.println("usereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

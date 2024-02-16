@@ -22,6 +22,9 @@
 		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 		<jakarta-validation-api.version>3.0.2</jakarta-validation-api.version>
 		<jjwt.version>0.12.5</jjwt.version>
+		<mybatis.version>3.0.3</mybatis.version>
+		<liquibase.version>4.26.0</liquibase.version>
+		<spring-doc.version>2.3.0</spring-doc.version>
 	</properties>
 
 	<dependencies>
@@ -55,6 +58,16 @@
 			<artifactId>jjwt-impl</artifactId>
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -99,6 +112,12 @@
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>${jakarta-validation-api.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${spring-doc.version}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

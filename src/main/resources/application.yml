@@ -3,16 +3,27 @@ spring:
     import: optional:file:.env[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/tasklist
+    url: jdbc:postgresql://localhost:5432/tasklist?currentSchema=tasklist
     username: postgres
     password: 1122
   sql:
     init:
-      mode: always
+      mode: never
       continue-on-error: false
 #      data-locations: classpath:demo_data.sql
+  liquibase:
+    change-log: classpath:liquibase/db.changelog.yaml
+    enabled: true
+    default-schema: tasklist
+
 security:
   jwt:
     secret: dFdUM1RZUlVISlJINDc0S0lMS1NXU1ZWQkJERkRHMTIzMz09LS0=
     access: 1
     refresh: 30
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+springdoc:
+  override-with-generic-response: false

@@ -58,7 +58,6 @@ public class UserServiceImpl implements UserService {
         userRepository.insertUserRole(user.getId(), Role.ROLE_USER);
         user.setRoles(roles);
         return user;
-
     }
 
     @Override

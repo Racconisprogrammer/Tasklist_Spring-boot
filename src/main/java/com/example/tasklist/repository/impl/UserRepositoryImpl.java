@@ -9,6 +9,7 @@ import com.example.tasklist.repository.UserRepository;
 import com.example.tasklist.repository.mapper.TaskRowMapper;
 import com.example.tasklist.repository.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.sql.*;
 import java.util.Optional;
 
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
@@ -95,8 +96,8 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             Connection connection = dataSourceConfig.getConnection();
             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID,
-                                                                        ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                                                        ResultSet.CONCUR_READ_ONLY);
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return Optional.ofNullable(UserRowMapper.mapRow(rs));
@@ -116,7 +117,7 @@ public class UserRepositoryImpl implements UserRepository {
                     ResultSet.CONCUR_READ_ONLY);
             statement.setString(1, username);
             try (ResultSet rs = statement.executeQuery()) {
-                return Optional.of(UserRowMapper.mapRow(rs));
+                return Optional.ofNullable(UserRowMapper.mapRow(rs));
             }
 
         } catch (SQLException throwables) {
@@ -201,7 +202,7 @@ public class UserRepositoryImpl implements UserRepository {
             PreparedStatement statement = connection.prepareStatement(IS_TASK_OWNER);
             statement.setLong(1, userId);
             statement.setLong(2, taskId);
-            try (ResultSet resultSet = statement.executeQuery() ) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 return resultSet.getBoolean(1);
             }
