@@ -2,7 +2,6 @@ package com.example.tasklist.web.dto.auth;
 
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
