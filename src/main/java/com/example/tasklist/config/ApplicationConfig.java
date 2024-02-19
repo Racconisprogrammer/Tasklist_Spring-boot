@@ -80,7 +80,7 @@ public class ApplicationConfig {
                                                 .type(SecurityScheme.Type.HTTP)
                                                 .scheme("bearer")
                                                 .bearerFormat("JWT")
-                                        )
+                                )
                 )
                 .info(new Info()
                         .title("Task list API")

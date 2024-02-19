@@ -6,7 +6,6 @@ import com.example.tasklist.domain.task.Task;
 import com.example.tasklist.domain.task.TaskImage;
 import com.example.tasklist.domain.user.User;
 import com.example.tasklist.repository.TaskRepository;
-import com.example.tasklist.repository.UserRepository;
 import com.example.tasklist.service.ImageService;
 import com.example.tasklist.service.TaskService;
 import com.example.tasklist.service.UserService;

@@ -51,12 +51,12 @@ public class TaskImageServiceImpl implements ImageService {
     @SneakyThrows
     private void createBucket() {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder()
-                        .bucket(minioProperties.getBucket())
-                        .build());
+                .bucket(minioProperties.getBucket())
+                .build());
         if (!found) {
             minioClient.makeBucket(MakeBucketArgs.builder()
-                            .bucket(minioProperties.getBucket())
-                            .build());
+                    .bucket(minioProperties.getBucket())
+                    .build());
         }
     }
 
@@ -73,9 +73,9 @@ public class TaskImageServiceImpl implements ImageService {
     @SneakyThrows
     private void saveImage(InputStream inputStream, String fileName) {
         minioClient.putObject(PutObjectArgs.builder()
-                        .stream(inputStream, inputStream.available(), -1)
-                        .bucket(minioProperties.getBucket())
-                        .object(fileName)
-                        .build());
+                .stream(inputStream, inputStream.available(), -1)
+                .bucket(minioProperties.getBucket())
+                .object(fileName)
+                .build());
     }
 }
