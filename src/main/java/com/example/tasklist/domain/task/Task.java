@@ -25,20 +25,30 @@ import java.util.List;
 public class Task implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.IDENTITY
+    )
     private Long id;
 
     private String title;
     private String description;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(
+            value = EnumType.STRING
+    )
     private Status status;
 
     private LocalDateTime expirationDate;
 
-    @Column(name = "image")
-    @CollectionTable(name = "tasks_images")
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(
+            name = "image"
+    )
+    @CollectionTable(
+            name = "tasks_images"
+    )
+    @ElementCollection(
+            fetch = FetchType.EAGER
+    )
     private List<String> images;
 
 }
