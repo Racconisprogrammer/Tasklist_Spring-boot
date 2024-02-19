@@ -19,6 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     AND task_id = :taskId
             )
             """, nativeQuery = true)
-    boolean isTaskOwner(@Param("userId") Long userId, @Param("taskId") Long taskId);
+    boolean isTaskOwner(
+            @Param("userId") Long userId,
+            @Param("taskId") Long taskId
+    );
 
 }

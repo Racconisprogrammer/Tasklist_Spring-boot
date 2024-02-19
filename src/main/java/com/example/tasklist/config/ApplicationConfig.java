@@ -50,13 +50,15 @@ public class ApplicationConfig {
 
     @Bean
     @SneakyThrows
-    public AuthenticationManager authenticationManager(final AuthenticationConfiguration configuration) {
+    public AuthenticationManager authenticationManager(
+            final AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
     public MethodSecurityExpressionHandler securityExpressionHandler() {
-        DefaultMethodSecurityExpressionHandler expressionHandler = new CustomSecurityExceptionHandler();
+        DefaultMethodSecurityExpressionHandler expressionHandler
+                = new CustomSecurityExceptionHandler();
         expressionHandler.setApplicationContext(applicationContext);
         return expressionHandler;
     }
@@ -65,14 +67,16 @@ public class ApplicationConfig {
     public MinioClient minioClient() {
         return MinioClient.builder()
                 .endpoint(minioProperties.getUrl())
-                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                .credentials(minioProperties.getAccessKey(),
+                        minioProperties.getSecretKey())
                 .build();
     }
 
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList("bearerAuth"))
                 .components(
                         new Components()
                                 .addSecuritySchemes("bearerAuth",
@@ -91,22 +95,39 @@ public class ApplicationConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    @SneakyThrows
+    public SecurityFilterChain securityFilterChain(
+            final HttpSecurity httpSecurity
+    ) {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagment ->
-                        sessionManagment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        sessionManagment
+                                .sessionCreationPolicy(
+                                        SessionCreationPolicy.STATELESS
+                                )
+                )
                 .exceptionHandling(exceptionHand ->
-                        exceptionHand.authenticationEntryPoint(((request, response, authException) -> {
-                                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                                    response.getWriter().write("Unauthorized");
-                                }))
-                                .accessDeniedHandler(((request, response, accessDeniedException) -> {
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                                    response.getWriter().write("Forbidden");
-                                }))
+                        exceptionHand.authenticationEntryPoint(
+                                (request, response, exception) -> {
+                                    response.setStatus(
+                                            HttpStatus.UNAUTHORIZED
+                                                    .value()
+                                    );
+                                    response.getWriter()
+                                            .write("Unauthorized");
+                                })
+                                .accessDeniedHandler(
+                                        (request, response, exception) -> {
+                                    response.setStatus(
+                                            HttpStatus.FORBIDDEN
+                                                    .value()
+                                    );
+                                    response.getWriter()
+                                            .write("Forbidden");
+                                })
                 )
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/v1/auth/**")
@@ -115,13 +136,12 @@ public class ApplicationConfig {
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")
                                 .permitAll()
-                                .anyRequest().authenticated()
-                )
+                                .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
-
 
 }
