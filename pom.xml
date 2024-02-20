@@ -62,7 +62,6 @@
             <artifactId>spring-boot-starter-graphql</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
