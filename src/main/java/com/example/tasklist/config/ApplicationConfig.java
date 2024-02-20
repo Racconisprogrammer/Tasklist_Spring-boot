@@ -136,6 +136,8 @@ public class ApplicationConfig {
                                 .permitAll()
                                 .requestMatchers("/v3/api-docs/**")
                                 .permitAll()
+                                .requestMatchers("/graphiql")
+                                .permitAll()
                                 .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider),
