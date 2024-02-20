@@ -29,7 +29,6 @@ public class TaskServiceImpl implements TaskService {
     private final ImageService imageService;
 
     @Override
-    @Transactional(readOnly = true)
     @Cacheable(
             value = "TaskService::getById",
             key = "#id"
@@ -43,7 +42,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Task> getAllByUserId(
             final Long id
     ) {
@@ -69,17 +67,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    @Caching(cacheable = {
-            @Cacheable(
-                    value = "TaskService::getById",
-                    key = "#task.id"),
-    })
+    @Cacheable(value = "TaskService::getById",
+                    condition = "#task.id!=null",
+                    key = "#task.id")
     public Task create(
             final Task task,
             final Long userId
     ) {
         User user = userService.getById(userId);
         task.setStatus(Status.TODO);
+        taskRepository.save(task);
         user.getTasks().add(task);
         userService.update(user);
         return task;
