@@ -4,11 +4,9 @@ import com.example.tasklist.domain.exception.ResourceNotFoundException;
 import com.example.tasklist.domain.task.Status;
 import com.example.tasklist.domain.task.Task;
 import com.example.tasklist.domain.task.TaskImage;
-import com.example.tasklist.domain.user.User;
 import com.example.tasklist.repository.TaskRepository;
 import com.example.tasklist.service.ImageService;
 import com.example.tasklist.service.TaskService;
-import com.example.tasklist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -17,6 +15,9 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -25,7 +26,6 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserService userService;
     private final ImageService imageService;
 
     @Override
@@ -39,6 +39,15 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Task not found"));
+    }
+
+    public List<Task> getAllSoonTasks(
+            final Duration duration
+    ) {
+        LocalDateTime now = LocalDateTime.now();
+        return taskRepository.findAllSoonTasks(
+                Timestamp.valueOf(now),
+                Timestamp.valueOf(now.plus(duration)));
     }
 
     @Override
@@ -58,27 +67,37 @@ public class TaskServiceImpl implements TaskService {
     public Task update(
             final Task task
     ) {
+        Task existing = getById(task.getId());
         if (task.getStatus() == null) {
-            task.setStatus(Status.TODO);
+            existing.setStatus(Status.TODO);
+        } else {
+            existing.setStatus(task.getStatus());
         }
+        existing.setTitle(task.getTitle());
+        existing.setDescription(
+                task.getDescription());
+        existing.setExpirationDate(
+                task.getExpirationDate());
         taskRepository.save(task);
         return task;
     }
 
     @Override
     @Transactional
-    @Cacheable(value = "TaskService::getById",
-                    condition = "#task.id!=null",
-                    key = "#task.id")
+    @Cacheable(
+            value = "TaskService::getById",
+            condition = "#task.id!=null",
+            key = "#task.id"
+    )
     public Task create(
             final Task task,
             final Long userId
     ) {
-        User user = userService.getById(userId);
-        task.setStatus(Status.TODO);
+        if (task.getStatus() != null) {
+            task.setStatus(Status.TODO);
+        }
         taskRepository.save(task);
-        user.getTasks().add(task);
-        userService.update(user);
+        taskRepository.assignTask(userId, task.getId());
         return task;
     }
 
@@ -100,10 +119,9 @@ public class TaskServiceImpl implements TaskService {
             key = "#id")
     public void uploadImage(
             final Long id,
-            final TaskImage taskImage) {
-        Task task = getById(id);
+            final TaskImage taskImage
+    ) {
         String fileName = imageService.upload(taskImage);
-        task.getImages().add(fileName);
-        taskRepository.save(task);
+        taskRepository.addImage(id, fileName);
     }
 }
