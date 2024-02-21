@@ -4,6 +4,7 @@ package com.example.tasklist.service;
 import com.example.tasklist.domain.task.Task;
 import com.example.tasklist.domain.task.TaskImage;
 
+import java.time.Duration;
 import java.util.List;
 
 public interface TaskService {
@@ -13,6 +14,8 @@ public interface TaskService {
     List<Task> getAllByUserId(Long id);
 
     Task update(Task task);
+
+    List<Task> getAllSoonTasks(Duration duration);
 
     Task create(Task task, Long userId);
 

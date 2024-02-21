@@ -41,6 +41,7 @@ public class TaskServiceImpl implements TaskService {
                         new ResourceNotFoundException("Task not found"));
     }
 
+    @Override
     public List<Task> getAllSoonTasks(
             final Duration duration
     ) {
