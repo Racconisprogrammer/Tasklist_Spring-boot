@@ -8,7 +8,9 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,8 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class TaskImageServiceImpl implements ImageService {
 

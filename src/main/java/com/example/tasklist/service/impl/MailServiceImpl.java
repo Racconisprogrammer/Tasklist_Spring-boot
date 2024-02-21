@@ -48,7 +48,10 @@ public class MailServiceImpl implements MailService {
                 "UTF-8");
         helper.setSubject("Thank you for registration, " + user.getName());
         helper.setTo(user.getUsername());
-        String emailContent = getRegistrationEmailContent(user, params);
+        String emailContent = getRegistrationEmailContent(
+                user,
+                params
+        );
         helper.setText(emailContent, true);
         mailSender.send(mimeMessage);
     }
@@ -59,7 +62,8 @@ public class MailServiceImpl implements MailService {
             final Properties params
     ) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
+        MimeMessageHelper helper = new MimeMessageHelper(
+                mimeMessage,
                 false,
                 "UTF-8");
         helper.setSubject("You have task to do in 1 hour");

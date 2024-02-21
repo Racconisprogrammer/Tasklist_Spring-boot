@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(
             value = "UserService::getById",
+            condition = "#id!=null",
             key = "#id"
     )
     public User getById(
